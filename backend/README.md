@@ -1,66 +1,68 @@
-# Market Price Platform - Backend API
+Local Market Price Comparison Platform
 
-## Setup Instructions
+The Local Market Price Comparison Platform is a full-stack web application that connects local merchants with customers, allowing users to browse and compare product prices across multiple stores in their area. The system aims to make shopping more convenient by giving customers access to real-time product data, merchant information, and detailed comparisons — all in one place.
 
-1. **Install Dependencies**
-   \`\`\`bash
-   cd backend
-   npm install
-   \`\`\`
+This project is built using modern web technologies such as Next.js 15 and React 19 for the frontend, Express.js with TypeScript for the backend, and MongoDB as the database. Authentication is handled securely using JWT-based authentication and includes role-based access control for users, merchants, and administrators.
 
-2. **Configure Environment Variables**
-   - Copy `.env.example` to `.env`
-   - Update MongoDB URI and JWT secret
+The application provides three main roles:
+Users can search for products, compare prices, and view store details.
+Merchants can register, manage their product listings, and adjust prices.
+Admins oversee the entire system — managing users, approving merchant accounts, and moderating product data.
 
-3. **Start MongoDB**
-   - Make sure MongoDB is running locally or use MongoDB Atlas
+Installation and Setup
 
-4. **Run Development Server**
-   \`\`\`bash
-   npm run dev
-   \`\`\`
+Before you start, make sure you have Node.js (version 18 or above) and MongoDB installed on your system. If you are using MongoDB locally, ensure that the MongoDB server is running in the background.
 
-5. **Create Admin User** (Run this script once)
-   \`\`\`bash
-   node scripts/create-admin.js
-   \`\`\`
+To begin, clone the repository and install all dependencies by running the following command inside the project directory:
 
-## API Endpoints
+npm install
+npm run backend:install
 
-### User Routes
-- `POST /api/users/register` - Register new user
-- `POST /api/users/login` - User login
-- `GET /api/users/profile` - Get user profile (auth required)
-- `PUT /api/users/profile` - Update user profile (auth required)
 
-### Merchant Routes
-- `POST /api/merchants/register` - Register new merchant
-- `POST /api/merchants/login` - Merchant login
-- `GET /api/merchants/profile` - Get merchant profile (auth required)
-- `PUT /api/merchants/profile` - Update merchant profile (auth required)
-- `GET /api/merchants/products` - Get merchant's products (auth required)
-- `POST /api/merchants/products` - Add new product (auth required)
-- `PUT /api/merchants/products/:id` - Update product (auth required)
-- `DELETE /api/merchants/products/:id` - Delete product (auth required)
+After installation, configure the environment variables. Create a file named .env.local in the project root directory and add the following line:
 
-### Admin Routes
-- `POST /api/admin/login` - Admin login
-- `GET /api/admin/users` - Get all users (admin only)
-- `GET /api/admin/merchants` - Get all merchants (admin only)
-- `PUT /api/admin/merchants/:id/approve` - Approve/disapprove merchant (admin only)
-- `DELETE /api/admin/users/:id` - Delete user (admin only)
-- `GET /api/admin/products` - Get all products (admin only)
-- `PUT /api/admin/products/:id/approve` - Approve/disapprove product (admin only)
-- `DELETE /api/admin/products/:id` - Delete product (admin only)
-- `GET /api/admin/reports` - Get platform reports (admin only)
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
 
-### Public Product Routes
-- `GET /api/products` - Get all products (with filters)
-- `GET /api/products/search?q=query` - Search products
-- `GET /api/products/:id` - Get product details with price comparison
 
-## Authentication
+Then create another file named .env inside the backend folder and add the backend configuration:
 
-All protected routes require a JWT token in the Authorization header:
-\`\`\`
-Authorization: Bearer <token>
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/market-price-platform
+JWT_SECRET=your-secret-key-here
+NODE_ENV=development
+
+
+Once your environment variables are set up, start your MongoDB service. If it’s running locally, you can use:
+
+mongod
+
+
+If this command doesn’t work, you may need to start the service manually through the MongoDB Compass or Windows Services tool.
+
+Next, seed your database with initial data by running these commands:
+
+cd backend
+node scripts/create-admin.js
+node scripts/seed-categories.js
+cd ..
+
+
+This will create the default administrator account and predefined categories used in the platform.
+
+Running the Application
+
+To start the application in development mode, open two terminal windows or tabs. In the first terminal, run the frontend server with:
+
+npm run dev
+
+
+In the second terminal, start the backend server by running:
+
+npm run backend
+
+
+After both servers are running successfully, you can access the application in your browser at:
+
+Frontend (User Interface): http://localhost:3000
+
+Backend API (Server): http://localhost:5000/api
