@@ -26,7 +26,7 @@ export function ProductForm({ product }: ProductFormProps) {
     description: "",
     image: "",
     price: "",
-    location: user?.location || "",
+    location: "",
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")

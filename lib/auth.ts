@@ -7,23 +7,31 @@ export interface User {
 }
 
 export function setAuthToken(token: string) {
-  localStorage.setItem("token", token)
+  if (typeof window !== 'undefined') {
+    localStorage.setItem("token", token)
+  }
 }
 
 export function getAuthToken(): string | null {
+  if (typeof window === 'undefined') return null
   return localStorage.getItem("token")
 }
 
 export function removeAuthToken() {
-  localStorage.removeItem("token")
-  localStorage.removeItem("user")
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+  }
 }
 
 export function setUser(user: User) {
-  localStorage.setItem("user", JSON.stringify(user))
+  if (typeof window !== 'undefined') {
+    localStorage.setItem("user", JSON.stringify(user))
+  }
 }
 
 export function getUser(): User | null {
+  if (typeof window === 'undefined') return null
   const userStr = localStorage.getItem("user")
   if (!userStr) return null
   try {

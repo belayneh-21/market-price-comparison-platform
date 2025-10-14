@@ -2,6 +2,7 @@ import type { Response } from "express"
 import jwt from "jsonwebtoken"
 import Merchant from "../models/Merchant.model"
 import Product from "../models/Product.model"
+import Category from "../models/Category.model"
 import type { AuthRequest } from "../middleware/auth.middleware"
 
 export const registerMerchant = async (req: AuthRequest, res: Response) => {
@@ -141,13 +142,27 @@ export const addProduct = async (req: AuthRequest, res: Response) => {
   try {
     const { name, category, description, image, price, location } = req.body
 
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Unauthorized" })
+    }
+
+    if (!name || !category || !price) {
+      return res.status(400).json({ message: "Name, category, and price are required" })
+    }
+
+    // Check if category exists
+    const categoryExists = await Category.findById(category)
+    if (!categoryExists) {
+      return res.status(400).json({ message: "Invalid category" })
+    }
+
     const product = await Product.create({
       name,
       category,
       description,
       image,
       price,
-      merchant: req.user?.id,
+      merchant: req.user.id,
       location,
     })
 
