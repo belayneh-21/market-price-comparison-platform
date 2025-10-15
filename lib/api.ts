@@ -84,5 +84,6 @@ export const api = {
     },
     getById: (id: string) => apiRequest(`/products/${id}`),
     search: (query: string) => apiRequest(`/products/search?q=${encodeURIComponent(query)}`),
+    getCategories: () => apiRequest("/products/categories"),
   },
 }

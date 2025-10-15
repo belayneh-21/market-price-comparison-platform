@@ -1,5 +1,6 @@
 import type { Request, Response } from "express"
 import Product from "../models/Product.model"
+import Category from "../models/Category.model"
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
@@ -78,6 +79,15 @@ export const searchProducts = async (req: Request, res: Response) => {
       .sort({ score: { $meta: "textScore" } })
 
     res.json({ products, total: products.length })
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message })
+  }
+}
+
+export const getCategories = async (req: Request, res: Response) => {
+  try {
+    const categories = await Category.find().sort({ name: 1 })
+    res.json({ categories })
   } catch (error: any) {
     res.status(500).json({ message: "Server error", error: error.message })
   }

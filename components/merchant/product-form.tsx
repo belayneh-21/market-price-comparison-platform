@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { api } from "@/lib/api"
 import { getUser } from "@/lib/auth"
 
@@ -28,8 +29,13 @@ export function ProductForm({ product }: ProductFormProps) {
     price: "",
     location: "",
   })
+  const [categories, setCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   useEffect(() => {
     if (product) {
@@ -44,6 +50,13 @@ export function ProductForm({ product }: ProductFormProps) {
     }
   }, [product])
 
+  const fetchCategories = async () => {
+    const response = await api.products.getCategories()
+    if (response.data?.categories) {
+      setCategories(response.data.categories)
+    }
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
@@ -52,7 +65,7 @@ export function ProductForm({ product }: ProductFormProps) {
     e.preventDefault()
     setError("")
 
-    if (!formData.name || !formData.price || !formData.location) {
+    if (!formData.name || !formData.category || !formData.price || !formData.location) {
       setError("Please fill in all required fields")
       return
     }
@@ -68,7 +81,6 @@ export function ProductForm({ product }: ProductFormProps) {
     const productData = {
       ...formData,
       price,
-      category: formData.category || "673d1234567890abcdef1234", // Default category ID
     }
 
     let response
@@ -109,6 +121,24 @@ export function ProductForm({ product }: ProductFormProps) {
               onChange={handleChange}
               required
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="category">
+              Category <span className="text-destructive">*</span>
+            </Label>
+            <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category._id} value={category._id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">

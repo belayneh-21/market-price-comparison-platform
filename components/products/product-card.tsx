@@ -26,7 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <CardContent className="p-4">
           <div className="mb-2">
             <Badge variant="secondary" className="text-xs">
-              {product.category?.name}
+              {product.category?.name || "Uncategorized"}
             </Badge>
           </div>
           <h3 className="line-clamp-2 text-lg font-semibold">{product.name}</h3>
