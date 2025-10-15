@@ -77,6 +77,56 @@ export const approveMerchant = async (req: AuthRequest, res: Response) => {
   }
 }
 
+export const updateMerchant = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params
+    const { storeName, email, phone, location, address } = req.body
+
+    const merchant = await Merchant.findById(id)
+    if (!merchant) {
+      return res.status(404).json({ message: "Merchant not found" })
+    }
+
+    if (storeName) merchant.storeName = storeName
+    if (email) merchant.email = email
+    if (phone) merchant.phone = phone
+    if (location) merchant.location = location
+    if (address) merchant.address = address
+
+    await merchant.save()
+
+    res.json({
+      message: "Merchant updated successfully",
+      merchant: {
+        id: merchant._id,
+        storeName: merchant.storeName,
+        email: merchant.email,
+        phone: merchant.phone,
+        location: merchant.location,
+        address: merchant.address,
+        isApproved: merchant.isApproved,
+      },
+    })
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message })
+  }
+}
+
+export const deleteMerchant = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const merchant = await Merchant.findByIdAndDelete(id)
+    if (!merchant) {
+      return res.status(404).json({ message: "Merchant not found" })
+    }
+
+    res.json({ message: "Merchant deleted successfully" })
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message })
+  }
+}
+
 export const blockUser = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params

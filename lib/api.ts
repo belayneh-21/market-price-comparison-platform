@@ -10,13 +10,13 @@ export async function apiRequest<T = any>(endpoint: string, options: RequestInit
   try {
     const token = localStorage.getItem("token")
 
-    const headers: HeadersInit = {
+    const headers = new Headers({
       "Content-Type": "application/json",
       ...options.headers,
-    }
+    })
 
     if (token) {
-      headers["Authorization"] = `Bearer ${token}`
+      headers.set("Authorization", `Bearer ${token}`)
     }
 
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -65,6 +65,9 @@ export const api = {
     getMerchants: () => apiRequest("/admin/merchants"),
     approveMerchant: (id: string, isApproved: boolean) =>
       apiRequest(`/admin/merchants/${id}/approve`, { method: "PUT", body: JSON.stringify({ isApproved }) }),
+    updateMerchant: (id: string, data: any) =>
+      apiRequest(`/admin/merchants/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+    deleteMerchant: (id: string) => apiRequest(`/admin/merchants/${id}`, { method: "DELETE" }),
     deleteUser: (id: string) => apiRequest(`/admin/users/${id}`, { method: "DELETE" }),
     getProducts: () => apiRequest("/admin/products"),
     approveProduct: (id: string, isApproved: boolean) =>
